@@ -33,7 +33,13 @@ const redraw = (can, ball) => {
   ctx.fill()
 }
 
-const uniform_motion = (can, ball) => {
+// 匀速运动: S = v * t
+// 匀变速运动: 
+// 加速度 a = (v末 - v0) / t
+// 瞬时速度 v瞬 = v0 + at
+// 平均速度 v匀 = (v0 + v瞬) / 2 = (v0 + v0 + at) / 2 = v0 + at / 2
+// 位移 S = v匀 * t = (v0 + at / 2) * t = v0t + att / 2
+const not_uniform_motion = (can, ball) => {
   ball.x += ball.x_speed * (ball.x_direction === 'right' ? 1 : -1)
   ball.x_direction = ball.x <= 0 ? 'right' : ball.x >= can.width ? 'left' : ball.x_direction
 
@@ -44,7 +50,7 @@ const uniform_motion = (can, ball) => {
 const animate = (can, ball) => {
   return () => {
     redraw(can, ball)
-    uniform_motion(can, ball)
+    not_uniform_motion(can, ball)
     window.requestAnimationFrame(animate(can, ball))
   }
 }
