@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas-1" width="300" height="300">
+  </canvas>
+  <script>
+  var sun = new Image();
+  sun.src = 'https://www.twle.cn/static/i/canvas/canvas_animation_sun.png';
+  var moon = new Image();
+  moon.src = 'https://www.twle.cn/static/i/canvas/canvas_animation_moon.png';
+  var earth = new Image();
+  earth.src = 'https://www.twle.cn/static/i/canvas/canvas_animation_earth.png';
+  
+  var ctx = document.getElementById('canvas-1').getContext('2d');
+
+  function draw() {
+  
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0,0,300,300); // clear canvas
+  
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+    ctx.save();
+    ctx.translate(150,150);
+  
+    // Earth
+    var time = new Date();
+    const n = ((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds() 
+    ctx.rotate( n);
+    ctx.translate(105,0);
+    ctx.fillRect(0,-12,50,24); // Shadow
+    ctx.drawImage(earth,-12,-12);
+  
+    // Moon
+    ctx.save();
+    ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
+    ctx.translate(0,28.5);
+    ctx.drawImage(moon,-3.5,-3.5);
+    ctx.restore();
+  
+    ctx.restore();
+  
+    ctx.beginPath();
+    ctx.arc(150,150,105,0,Math.PI*2,false); // Earth orbit
+    ctx.stroke();
+  
+    ctx.drawImage(sun,0,0,300,300);
+  
+    window.requestAnimationFrame(draw);
+  }
+  
+  window.requestAnimationFrame(draw)
+  </script>
+  
+</body>
+</html>

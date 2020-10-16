@@ -1,0 +1,97 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太阳系</title>
+  <style>
+    canvas{
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="300" height="300"></canvas>
+
+  <script>
+    const sun = new Image()
+    sun.src = './sun.png'
+    const moon = new Image()
+    moon.src = './moon.png'
+    const earth = new Image()
+    earth.src = './earth.png'
+    const ctx = document.getElementById('canvas').getContext('2d')
+
+    // 地球直径
+    const earthD = 48
+    // 月球直径
+    const moonD = 7
+    const earthR = earthD / 2
+    const moonR = moonD / 2
+    const halfER = earthR / 2
+    // 月球到地球的圆心距
+    const M2E_distance = 28.5
+    // 月食
+    const lunar_eclipse_style = 'rgba(0, 0, 0, .4)'
+    // 地球运动轨迹/公转轨迹
+    const earth_orbit_style = 'rgba(0, 153, 255, .4)'
+    const earth_orbit_r = 105
+    const _2PI = 2 * Math.PI
+    // requestAnimationFrame 每秒渲染60帧
+    const fps = 60
+    // 地球公转与月球公转速度比
+    const ratio = 365 / 30
+
+    function draw () {
+      // 先画的图片在上，后画的在下
+      ctx.globalCompositeOperation = 'destination-over'
+      ctx.clearRect(0, 0, 300, 300)
+      // 用于制造阴影区域，模拟月食：地球在太阳和月亮之间
+      // 遮挡太阳直射到月球上的光，使月球变暗
+      ctx.fillStyle = lunar_eclipse_style
+      ctx.strokeStyle = earth_orbit_style
+
+      ctx.save()
+      ctx.translate(150, 150)
+
+      const time = new Date()
+      const seconds = time.getSeconds()
+      const m_seconds = time.getMilliseconds()
+      // 每秒旋转角度
+      const degrees_per_second = ratio => _2PI / (fps / ratio) * seconds
+      // 每毫秒旋转角度
+      const degrees_per_m_second = ratio => _2PI / (fps / ratio * 1000) * m_seconds
+
+      // 每帧的旋转角度
+      const earth_deg = degrees_per_second(1) + degrees_per_m_second(1)      
+      ctx.rotate(earth_deg)
+      ctx.translate(earth_orbit_r, 0)
+      ctx.fillRect(0, -halfER, M2E_distance + moonR, earthR)
+      ctx.drawImage(earth, -halfER, -halfER)
+      
+      ctx.save()
+      ctx.translate(150, 150)
+
+      const moon_deg = degrees_per_second(ratio) + degrees_per_m_second(ratio)
+      ctx.rotate(moon_deg)
+      ctx.translate(0, M2E_distance)
+      ctx.drawImage(moon, -moonR, -moonR)
+
+      ctx.restore()
+      ctx.restore()
+
+      ctx.beginPath()
+      // 地球轨迹
+      ctx.arc(150, 150, earth_orbit_r, 0, _2PI, false)
+      ctx.stroke()
+      ctx.drawImage(sun, 0, 0, 300, 300)
+
+      window.requestAnimationFrame(draw)
+    }
+
+    window.requestAnimationFrame(draw)
+    // todo: 月食理论上阴影不是矩形，应该是类三角形
+    // todo: 地球自转
+    // todo: 太阳发光效果
+  </script>
+</body>
+</html>
