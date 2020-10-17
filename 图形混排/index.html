@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图形混排</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="2600"></canvas>
+
+  <script>
+    const mode = [
+      'source-over','source-in','source-out','source-atop',
+      'destination-over','destination-in','destination-out','destination-atop',
+      'lighter', 'copy','xor', 'multiply', 'screen', 'overlay', 'darken',
+      'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+      'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'
+    ]
+
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    ctx.font = "16px Microsoft YaHei"
+    ctx.textBaseline = "middle"
+    ctx.fillStyle="#333"
+
+    const fillBlueRect = ctx => {
+      ctx.fillStyle = 'blue'
+      ctx.fillRect(10, 35, 50, 50)
+    }
+
+    const fillRedRect = ctx => {
+      ctx.fillStyle = 'red'
+      // ctx.fillStyle = 'blue'
+      ctx.fillRect(25, 50, 50, 50)
+    }
+
+    ;(() => {
+      mode.forEach(el => {
+        ctx.save()
+        ctx.fillText(el, 10, 15)
+        
+        fillBlueRect(ctx)
+        ctx.translate(70, 0)
+        fillBlueRect(ctx)
+        fillRedRect(ctx)
+
+        const can2 = document.createElement('canvas')
+        const ctx2 = can2.getContext('2d')
+        fillBlueRect(ctx2)
+        ctx2.globalCompositeOperation = el
+        fillRedRect(ctx2)
+        ctx.drawImage(can2, 85, 0)
+
+        ctx.beginPath()
+        ctx.rect(185, 35, 50, 50)
+        ctx.rect(255, 35, 50, 50)
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(295, 75, 25, 0, 2 * Math.PI)
+        ctx.stroke()
+
+        const can3 = document.createElement('canvas')
+        const ctx3 = can3.getContext('2d')
+        ctx3.beginPath()
+        ctx3.rect(155, 35, 50, 50)
+        ctx3.stroke()
+        
+        ctx3.globalCompositeOperation = el
+
+        ctx3.beginPath()
+        ctx3.arc(195, 75, 25, 0, 2 * Math.PI)
+        ctx3.stroke()
+
+        ctx.drawImage(can3, 185, 0)
+
+        ctx.restore()
+        ctx.translate(0, 100)
+      })
+    })()
+  </script>
+</body>
+</html>
