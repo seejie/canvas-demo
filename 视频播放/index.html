@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视频播放</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <video id="video" src="./video.mp4" controls></video>
+  <canvas id="canvas3"></canvas>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2" style="background-color: red;"></canvas>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const video = document.getElementById('video')
+      const can = document.getElementById('canvas')
+      const can2 = document.getElementById('canvas2')
+      const can3 = document.getElementById('canvas3')
+      const ctx = can.getContext('2d')
+      const ctx2 = can2.getContext('2d')
+      const ctx3 = can3.getContext('2d')
+
+      let width
+      let height
+      video.onplay = () => {
+        width = video.videoWidth / 2
+        height = video.videoHeight / 2
+        timerCallback()
+      }
+
+      // 捕捉视频更新并画视频
+      // 因为视频更新回调频率较低，导致画面有些卡顿
+      video.ontimeupdate = () => ctx3.drawImage(video, 0, 0, width, height)
+
+      function timerCallback () {
+        if (video.paused || video.ended) return
+        computeFrame()
+        // 使用requestAnimationFrame每秒60帧渲染
+        requestAnimationFrame(timerCallback)
+      }
+
+      function computeFrame() {
+        ctx.drawImage(video, 0, 0, width, height)
+        const frame = ctx.getImageData(0, 0, width, height)
+        const l = frame.data.length / 4
+
+        // 背景过滤
+        for (let i = 0; i < l; i++) {
+          const r = frame.data[i * 4 + 0]
+          const g = frame.data[i * 4 + 1]
+          const b = frame.data[i * 4 + 2]
+          if (g > 100 && r > 100 && b < 43) {
+            // alpha通道0-255, 透明-可见
+            // frame.data[i * 4 + 3] = 255
+            frame.data[i * 4 + 3] = 0
+          }
+        }
+        ctx2.putImageData(frame, 0, 0)
+        return
+      }
+    })
+  </script>
+</body>
+</html>
