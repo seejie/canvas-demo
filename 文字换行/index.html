@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文字换行</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="200"></canvas>
+
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    const maxWidth = 400
+    const lineHeight = 25
+    const x = (canvas.width - maxWidth) / 2
+    let y = 60
+    const txt = 'All the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.'
+    
+    ctx.font = '16pt Calibri'
+    ctx.fillStyle = '#333'
+
+    const words = txt.split(' ')
+    let line = ''
+    for (let i = 0, len = words.length; i < len; i++) {
+      const testLine = line + words[i] + ' '
+      const testWidth = ctx.measureText(testLine).width
+      if (testWidth > maxWidth && i > 0) {
+        ctx.fillText(line, x, y)
+        line = words[i] + ' '
+        y += lineHeight
+      } else {
+        line = testLine
+      }
+      ctx.fillText(line, x, y)
+    }
+  </script>
+</body>
+</html>
