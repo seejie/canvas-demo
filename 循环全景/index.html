@@ -1,0 +1,56 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>循环全景</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="840" height="210"></canvas>
+
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    const speed = 30 // lower is faster
+    const scale = 1.05
+    const canW = 840
+    const canH = 210
+    const dx = 0.75 // vertical offset
+    let imgW, imgH, x = 0, y = -4.5
+
+    const img = new Image()
+    img.src = './panorama.jpg'
+    img.onload = () => {
+      imgW = img.width * scale
+      imgH = img.height * scale
+      return setInterval(draw, speed)
+    }
+
+    function draw () {
+      ctx.clearRect(0, 0, canW, canW)
+
+      if (imgW <= canW) {
+        // reset, start from beginning
+        x = x > canW ? -imgW + x : x
+        // draw additional image1
+        x > 0 && ctx.drawImage(img, -imgW + x, y, imgW, imgH);
+        // draw additional image2
+        x - imgW > 0 && ctx.drawImage(img, -imgW * 2 + x, y, imgW, imgH);
+          
+      } else {
+        // reset, start from beginning
+        x = x > canW ? canW - imgW : x
+        // draw aditional image
+        if (x > (canW - imgW)) ctx.drawImage(img, x - imgW + 1, y, imgW, imgH);
+      }
+      // draw image
+      ctx.drawImage(img, x, y,imgW, imgH);
+      // amount to move
+      x += dx;
+    }
+  </script>
+</body>
+</html>
