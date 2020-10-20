@@ -8,7 +8,68 @@
   </style>
 </head>
 <body>
-  <canvas id="canvas" width="400" height="200"></canvas>
-  <script src="main.js"></script>
+  <canvas id="canvas" width="600" height="200"></canvas>
+  <input type="button" value="stop" onclick="stop()">
+  <input type="button" value="start" onclick="start()">
+
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+    const rectangle = {
+      x: 250,
+      y: 70,
+      width: 100,
+      height: 50,
+      borderWidth: 5
+    }
+    let raf = null
+
+    draw()
+
+    function draw () {
+      ctx.beginPath()
+      const {x, y, width, height, borderWidth} = rectangle
+      ctx.rect(x, y, width, height)
+      ctx.fillStyle = '#8ED6FF'
+      ctx.fill()
+      ctx.lineWidth = borderWidth
+      ctx.strokeStyle = 'black'
+      ctx.stroke()
+    }
+
+    function animate (startTime) {
+      const time = new Date().getTime() - startTime
+      // 振幅
+      const amplitude = 100
+      const period = 300
+
+      const centerX = can.width / 2 - rectangle.width / 2
+      // 频率 = 单位时间 / 周期
+      // 随着time距开始时间越来越大，频率逐渐增大，增幅近似0.5
+      const hz = time / period
+      // sin正弦函数, 函数特性[-1, 1]; 
+      // 随着x的增大，y在[-1, 1]之间徘徊，
+      // 好似y在不断向前，按照固定周期不断经过波峰波谷
+      const sin = Math.sin(hz)
+      const nextX = amplitude * sin + centerX
+      rectangle.x = nextX
+
+      ctx.clearRect(0, 0, can.width, can.height)
+      draw()
+      raf = requestAnimationFrame(()=>animate(startTime))
+    }
+
+    function stop () {
+      cancelAnimationFrame(raf)
+    }
+
+    function start () {
+      setTimeout(() => {
+        animate(new Date().getTime())
+      }, 500)
+    }
+
+    start()
+  </script>
 </body>
 </html>
