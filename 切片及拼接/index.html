@@ -8,12 +8,21 @@
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <img src="./spirit.png" alt="">
   
   <script>
     const can = document.getElementById('canvas')
     const ctx = can.getContext('2d')
 
+    const img = new Image()
+    img.src = './spirit.png'
+    img.onload = () => {
+      // drawImage(img, sx, sy, swidth, sheight, x, y, width, height)
+      ctx.drawImage(img, 0, 0, 240, 300, 0, 0, 100, 100)
+      ctx.drawImage(img, 0, 300, 240, 300, 100, 0, 100, 100)
+      ctx.drawImage(img, 240, 0, 240, 300, 0, 100, 100, 100)
+    }
   </script>
 </body>
 </html>
