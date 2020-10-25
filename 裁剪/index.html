@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>裁剪</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    // ctx.clip()
+    ctx.beginPath()
+    ctx.rect(10, 10, 50, 50)
+    ctx.stroke()
+
+    ctx.clip()
+
+    ctx.beginPath()
+    ctx.arc(50, 50, 25, 0, 2 * Math.PI)
+    ctx.stroke()
+    // ctx.fillStyle = 'white'
+    // ctx.fill()
+
+    ctx.clip()
+
+    // ctx.beginPath()
+    // ctx.rect(10, 10, 50, 50)
+    // ctx.stroke()
+  </script>
+</body>
+</html>
