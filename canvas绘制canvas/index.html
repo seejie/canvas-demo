@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>离屏渲染</title>
+  <style>
+    canvas{ 
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="300" height="100"></canvas>
+
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    const buffer_can = document.createElement('canvas')
+    buffer_can.width = can.width
+    buffer_can.height = can.height
+    const buffer_ctx = buffer_can.getContext('2d')
+
+    buffer_ctx.fillStyle = 'green'
+    buffer_ctx.fillRect(10, 10, 100, 50)
+
+    // 动态创建canvas并绘制到另一个canvas上
+    ctx.drawImage(buffer_can, 0, 0)
+  </script>
+</body>
+</html>

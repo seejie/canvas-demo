@@ -4,28 +4,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>离屏渲染</title>
   <style>
-    canvas{ 
-      border: 1px solid #eee;
-    }
+    canvas{border: 1px solid #eee;}
   </style>
 </head>
 <body>
-  <canvas id="canvas" width="300" height="100"></canvas>
-
+  <canvas id="canvas"></canvas>
   <script>
+    // 利用offscreen 配合 worker 避免阻塞主线程，提高性能
     const can = document.getElementById('canvas')
-    const ctx = can.getContext('2d')
-
-    const buffer_can = document.createElement('canvas')
-    buffer_can.width = can.width
-    buffer_can.height = can.height
-    const buffer_ctx = buffer_can.getContext('2d')
-
-    buffer_ctx.fillStyle = 'green'
-    buffer_ctx.fillRect(10, 10, 100, 50)
-
-    // 动态创建canvas并绘制到另一个canvas上
-    ctx.drawImage(buffer_can, 0, 0)
+    const offscreen = can.transferControlToOffscreen()
+    const worker = new Worker('./worker.js')
+    worker.postMessage({ msg: 'start', canvas: offscreen }, [offscreen])
   </script>
 </body>
 </html>
