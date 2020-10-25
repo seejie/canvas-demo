@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>shake抖动</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="600" height="400"></canvas>
+  <input id="shake" type="button" value="抖动">
+  
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    let x = 275
+    ctx.fillStyle = 'red'
+    ctx.fillRect(x, 175, 50, 50)
+
+    const arr = [20, -20, 18, -18, 16, -16, 14, -14, 12, -12, 10, -10, 8, -8, 6, -6, 4, -4, 2, -2, 0]
+    const shake = document.getElementById('shake')
+    let timer = null
+    shake.onclick = () => {
+      clearInterval(timer)
+      let step = JSON.parse(JSON.stringify(arr))
+      timer = setInterval(() => {
+        if (!step.length) {
+          clearInterval(timer)
+          return
+        }
+
+        ctx.clearRect(0, 0, 600, 400)
+        x += step.shift()
+        ctx.fillRect(x, 175, 50, 50)
+      }, 30);
+    }
+  </script>
+</body>
+</html>
