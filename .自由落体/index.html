@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自由落体</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="300" height="800"></canvas>
+  <input id="go" type="button" value="go">
+
+  <script>
+    const can = document.getElementById('canvas')
+    const ctx = can.getContext('2d')
+
+    let y = 10
+    ctx.fillStyle = 'red'
+    ctx.fillRect(10, y, 50, 50)
+
+    const go = document.getElementById('go')
+    let timer = null
+    let speed = 10
+    go.onclick = animate
+
+    function animate () {
+      clearInterval(timer)
+      timer = setInterval(() => {
+        const n = Math.round(y + speed)
+        if (n > 750) {
+          speed *= -1
+          speed *= .75
+        } else if (n >= 750) {
+          clearInterval(timer)
+          return
+        }
+
+        ctx.clearRect(0, 0, 300, 800)
+        speed += 3
+        y += speed
+        ctx.fillRect(10, y, 50, 50)
+      }, 30)
+    }
+  </script>
+</body>
+</html>
