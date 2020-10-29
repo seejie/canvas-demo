@@ -29,6 +29,7 @@ const redraw = (can, ball) => {
 const not_uniform_motion = (can, ball) => {
   ball.x += ball.x_speed
   ball.y += ball.y_speed
+  // 加速度
   ball.y_speed *= .99
   ball.y_speed += .25
 
