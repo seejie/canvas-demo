@@ -1,25 +1,12 @@
-const Ball = options => {
-  const {
-    x = 10,
-    y = 10,
-    r = 10,
-    color = 'black',
-    x_direction = 'right',
-    y_direction = 'top',
-    x_speed = 100 / 60,
-    y_speed = 100 / 60
-  } = options
-  
-  return {
-    x,
-    y,
-    r,
-    color,
-    x_direction,
-    y_direction,
-    x_speed,
-    y_speed
-  }
+const can = document.getElementById('canvas')
+
+const ball = {
+  x: 10,
+  y: 10,
+  r: 10,
+  color: 'blue',
+  x_speed: 5,
+  y_speed: 2
 }
 
 const redraw = (can, ball) => {
@@ -40,11 +27,19 @@ const redraw = (can, ball) => {
 // 平均速度 v匀 = (v0 + v瞬) / 2 = (v0 + v0 + at) / 2 = v0 + at / 2
 // 位移 S = v匀 * t = (v0 + at / 2) * t = v0t + att / 2
 const not_uniform_motion = (can, ball) => {
-  ball.x += ball.x_speed * (ball.x_direction === 'right' ? 1 : -1)
-  ball.x_direction = ball.x <= 0 ? 'right' : ball.x >= can.width ? 'left' : ball.x_direction
+  ball.x += ball.x_speed
+  ball.y += ball.y_speed
+  ball.y_speed *= .99
+  ball.y_speed += .25
 
-  ball.y += ball.y_speed * (ball.y_direction === 'bottom' ? 1 : -1)
-  ball.y_direction = ball.y <= 0 ? 'bottom' : ball.y >= can.height ? 'top' : ball.y_direction
+  if (ball.y + ball.y_speed > can.height ||
+      ball.y + ball.y_speed < 0) {
+    ball.y_speed = -ball.y_speed
+  }
+  if (ball.x + ball.x_speed > can.width ||
+      ball.x + ball.x_speed < 0) {
+    ball.x_speed = -ball.x_speed
+  }
 }
 
 const animate = (can, ball) => {
@@ -54,3 +49,5 @@ const animate = (can, ball) => {
     window.requestAnimationFrame(animate(can, ball))
   }
 }
+
+window.requestAnimationFrame(animate(can, ball))
