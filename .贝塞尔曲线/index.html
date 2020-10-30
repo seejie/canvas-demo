@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贝塞尔曲线</title>
+  <style>
+    canvas{border: 1px solid #eee;}
+  </style>
+</head>
+<body>
+  <canvas id="ctx"></canvas>
+  <script>  
+    const can = document.getElementById('ctx')
+    const ctx = can.getContext('2d')
+    ctx.beginPath()
+    ctx.moveTo(50, 50)
+    ctx.bezierCurveTo(104, 104, 227, 55, 267, 116)
+    ctx.stroke()
+
+    function Rect(x,y){
+      this.x = x
+      this.y = y
+
+      ctx.rect(this.x, this.y, 10, 10)
+      ctx.stroke()
+    }
+
+    Rect.prototype.redraw = function (point) {
+      ctx.rect(this.x, this.y, 10, 10)
+      ctx.stroke()
+      if(ctx.isPointInPath(point.x, point.y)) {
+        this.click()
+      }
+    }
+
+    Rect.prototype.click = function () {
+      console.log(this, '-----this-----')
+    }
+
+    const rect1 = new Rect(104, 104)
+    const rect2 = new Rect(227, 55)
+
+    // rect1.click =  () => {
+    //   console.log(2, '-----2-----')
+    // }
+
+    can.onmousedown = ({clientX, clientY}) => {
+      const point = {
+        x: clientX - can.offsetLeft,
+        y: clientY - can.offsetTop
+      }
+      rect1.redraw(point)
+      rect2.redraw(point)
+    }
+  </script>
+</body>
+</html>
