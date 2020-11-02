@@ -17,32 +17,35 @@
     ctx.bezierCurveTo(104, 104, 227, 55, 267, 116)
     ctx.stroke()
 
-    function Rect(x,y){
+    function Rect(x,y) {
       this.x = x
       this.y = y
 
+      ctx.beginPath()
       ctx.rect(this.x, this.y, 10, 10)
+      ctx.closePath()
       ctx.stroke()
     }
 
     Rect.prototype.redraw = function (point) {
+      ctx.beginPath()
       ctx.rect(this.x, this.y, 10, 10)
+      ctx.closePath()
       ctx.stroke()
       if(ctx.isPointInPath(point.x, point.y)) {
         this.click()
       }
     }
 
-    Rect.prototype.click = function () {
-      console.log(this, '-----this-----')
-    }
-
     const rect1 = new Rect(104, 104)
     const rect2 = new Rect(227, 55)
 
-    // rect1.click =  () => {
-    //   console.log(2, '-----2-----')
-    // }
+    rect1.click = () => {
+      console.log(1, '-----1-----')
+    }
+    rect2.click = () => {
+      console.log(2, '-----2-----')
+    }
 
     can.onmousedown = ({clientX, clientY}) => {
       const point = {
@@ -52,6 +55,7 @@
       rect1.redraw(point)
       rect2.redraw(point)
     }
+
   </script>
 </body>
 </html>
